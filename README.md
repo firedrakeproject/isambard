@@ -6,7 +6,7 @@ Building Firedrake requires a Python installation with a working pip. The Python
 
 The build process is set out in detail in the following steps:
 
-* Make a new directory on Isambard to use for building Firedrake. This can be called anything you like but for the purposes of these instructions we will assume the directory is ${HOME}/firedrake`:
+1. Make a new directory on Isambard to use for building Firedrake. This can be called anything you like but for the purposes of these instructions we will assume the directory is `${HOME}/firedrake`:
 
 ```bash
   cd ~
@@ -14,19 +14,19 @@ The build process is set out in detail in the following steps:
   cd firedrake
 ```
 
-* Clone this repository and create links to the scripts:
+2. Clone this repository and create links to the scripts:
 
 ```bash
    git clone git@bitbucket.org:dacreman/firedrake_scripts.git
    ln -s firedrake_scripts/isambard/*.sh .
 ```
 
-* Build Python:
+3. Build Python:
 ```bash
    bash build_python3.7_isambard.sh
 ```
 
-* Submit a job to the queue to build Firedrake :
+4. Submit a job to the queue to build Firedrake :
 ```bash
    qsub submit_build.sh
 ```
