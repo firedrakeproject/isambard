@@ -5,4 +5,4 @@
 #PBS -N FD_build
 
 cd ${PBS_O_WORKDIR}
-./install_firedrake_isambard.sh
+bash install_firedrake_isambard.sh
