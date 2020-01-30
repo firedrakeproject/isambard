@@ -1,5 +1,7 @@
 ## Building Firedrake on Isambard
 
+This build process describes how to install Firedrake on Isambard Phase 2 (the ARM part of the system). Instructions for connecting to phase 2 can be found at https://gw4-isambard.github.io/docs/user-guide/connecting.html.
+
 The build process will work better if you upload your Isambard public SSH key to GitHub (see https://help.github.com/articles/connecting-to-github-with-ssh/ for how to do this). You can build Firedrake without uploading an SSH key but you will see some warnings during the build processes. 
 
 Building Firedrake requires a Python installation with a working pip. The Python versions available as modules on Isambard do not have a working pip so you will need to build your own Python distribution before building Firedrake.
