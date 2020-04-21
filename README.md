@@ -9,52 +9,77 @@ You may wish to upload your Isambard public SSH key to GitHub (see
 https://help.github.com/articles/connecting-to-github-with-ssh/
 for how to do this).
 You can build Firedrake without uploading an SSH key,
-but you will see some warnings during the build processes.
+but you may see some warnings during the build processes.
 
 Building Firedrake requires a Python installation with a working pip.
-The Python versions available as modules on Isambard do not have a
-working pip so you will need to build your own Python distribution
-before building Firedrake.
+For this installation we will use the Cray Python available on Isambard
+
+```bash
+  module load cray-python/3.6.5.6
+```
 
 The build process is set out in detail in the following steps:
 
-1. Make a new directory on Isambard to use for building Firedrake.
-This can be called anything you like but for the purposes of these
-instructions we will assume the directory is `${HOME}/firedrake`:
+1. If it doesn't exist already create the directory `$HOME/bin`,
+change to that directory and grab the aprun wrapper that we use for
+the build:
 
 ```bash
-  cd ~
-  mkdir firedrake
-  cd firedrake
+  mkdir $HOME/bin
+  cd $HOME/bin
+  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/aprun
 ```
 
-2. Clone this repository and create links to the scripts:
+2. Navigate to where you want to install Firedrake, fetch the
+install script and make it executable
 
 ```bash
-   git clone git@github.com:firedrakeproject/isambard.git
-   ln -s isambard/*.sh .
+  cd /place/to/install/firedrake
+  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/install_firedrake_isambard.sh
+  chmod +x install_firedrake_isambard.sh
 ```
 
-3. Build Python:
+You may wish to modify the line
 
 ```bash
-   bash build_python3.7_isambard.sh
+  export NEW_VENV_NAME=firedrake
 ```
 
-4. Submit a job to the queue to build Firedrake:
+in `install_firedrake_isambard.sh` so that your venv has a different name.
+This is mostly useful if you have multiple Firedrake installations.
+
+3. Execute
 
 ```bash
-   qsub submit_build.sh
+  ./install_firedrake_isambard
 ```
 
-Firedrake will not build on a log in node so has to run via the batch
-queue
-(you can run the build script using an interactive job if you prefer).
+to install Firedrake.
 
-Additional arguments to `firedrake-install` can be passed to the
-`install_firedrake_isambard.sh` script by editing `submit_build.sh`.
+4. Finally, to activate the new Firedrake venv, change back into the
+directory `$HOME/bin` and grab the activate script:
+
+```bash
+  cd $HOME/bin
+  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/activate_firedrake.sh
+```
+
+Using this script ensures that the same modules and environment
+variables are set as were set at install time.
+
+The Firedrake venv is activated by running
+
+```bash
+  source $HOME/bin/firedrake_activate.sh
+```
 
 You will need a job script to submit a job to the queue, which can be
-based on the example `submit_firedrake_isambard.sh`.
-You will need to edit the script to specify the location of your
-Firedrake build and the name of the Python script you want to run.
+based on the example
+[here](https://github.com/firedrakeproject/isambard/blob/alternative_install/example_firedrake_jobscript.sh).
+You will need to edit the jobscript with the name of the Python script
+you wish to run.
+
+Alternatively you can run a job interactively using
+```bash
+  qsub -I -q arm-dev -l walltime=03:00:00
+```

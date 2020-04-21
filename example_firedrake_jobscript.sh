@@ -21,7 +21,7 @@ cd ${PBS_O_WORKDIR}
 export OMP_NUM_THREADS=1
 
 # Activate Firedrake venv
-source firedrake_activate.sh
+source $HOME/bin/firedrake_activate.sh
 
 # Not sure what this line does...
 # ...maybe magic?
