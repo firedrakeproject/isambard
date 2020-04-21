@@ -1,47 +1,99 @@
 #!/bin/bash
 
-set -eu
+##################################################
+# Script for installing Firedrake on Isambard    #
+# Written by Jack Betteridge April 2020          #
+#                                                #
+# Currently this script works on a login node    #
+# and uses an aprun wrapper (found in the same   #
+# repository as this script). A build on an      #
+# execution node will fail as nested aprun calls #
+# are forbidden                                  #
+##################################################
 
-python_version_num=3.7.4
-python_install_dir=${PWD}/python/${python_version_num}
+module swap PrgEnv-cray PrgEnv-gnu/6.0.5
+module load pmi-lib
+module load cray-python/3.6.5.6
 
-echo "Setting up modules"
-module swap PrgEnv-cray PrgEnv-gnu
-module list
+# Load some Bristol modules
+module use /projects/bristol/modules-arm/modulefiles
+module load htop
+module load valgrind/3.13.0
 
-echo "Setting PKG_CONFIG_PATH to pick up libffi"
-export PKG_CONFIG_PATH=${python_install_dir}/lib/pkgconfig:${PKG_CONFIG_PATH}
-echo
+# Give the venv a name
+export NEW_VENV_NAME=firedrake
 
-export PATH=${python_install_dir}/bin:${PATH}
-export LD_LIBRARY_PATH=${python_install_dir}/lib:${LD_LIBRARY_PATH}
-export LDFLAGS="-Wl,-rpath,${python_install_dir}/lib"
-
-unset PYTHONPATH
-
-# Set PETSc options
-export PETSC_CONFIGURE_OPTIONS="-with-cc=cc -with-cxx=CC -with-mpiexec=aprun --download-hdf5 --download-hdf5-configure-arguments='-build=aarch64-unknown-linux-gnu'"
-
-export MPIF90=ftn
-
-# Allow dynamically linked executables to be built
+# Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
 
-# Set compiler for PyOP2
+# Set all compilers to be Cray wrappers
 export CC=cc
+export CXX=CC
+export F90=ftn
 
-# Don't build in /tmp as this is not shared between nodes
-export TMPDIR=${HOME}/tmp
-if [[ -d ${TMPDIR} ]]; then
-    echo "Found ${TMPDIR}"
-else
-    echo "Making ${TMPDIR}"
-    mkdir ${TMPDIR}
-fi
+export MPICC=cc
+export MPICXX=CC
+export MPIF90=ftn
 
-echo "Fetching install script"
-curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/isambardBuild/scripts/firedrake-install
-echo "Installing"
-python3 firedrake-install --verbose --no-package-manager --mpicc=cc --mpicxx=CC --mpif90=ftn --mpiexec=aprun $@
+# Needed for numpy and scipy
+export LAPACK=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
+export BLAS=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
+# PYTHONPATH is set by Cray python and not helpful here!
+unset PYTHONPATH
 
-echo "Done"
+# Set main to be working directory
+# Change to working directory if submitting as a jobscript
+# cd $PBS_O_WORKDIR
+MAIN=`pwd`
+# hdf5/h5py/netcdf difficult to install, help as much as possible
+# by providing these paths
+export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+export HDF5_MPI=ON
+export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+
+# Grab the Firedrake install script (currently in a branch)
+curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/isambard_fix/scripts/firedrake-install
+
+# Add the following options to build PETSc
+export PETSC_CONFIGURE_OPTIONS="--with-mpi-include=/opt/cray/pe/mpt/7.7.6/gni/mpich-gnu/8.2/include \
+    --with-mpi-lib=/opt/cray/pe/mpt/7.7.6/gni/mpich-gnu/8.2/lib/libmpich.a \
+    --with-x=0 --with-make-np=32 \
+    --COPTFLAGS='-O3 -march=native -mtune=native' \
+    --CXXOPTFLAGS='-O3 -march=native -mtune=native' \
+    --FOPTFLAGS='-O3 -march=native -mtune=native' \
+    --build=aarch64-linux-gnu"
+
+# Massive hack
+# There is currently a permissions bug when cloning the petsc4py repo
+# this hacky bash loop fixes the permissions when the repo is cloned
+# and allows the installation to complete
+function hack {
+    ls -j 2> /dev/null
+    while [ $? -ne 0 ]
+    do
+        sleep 30s
+        chmod -R ug+rw $MAIN/$NEW_VENV_NAME/src/petsc4py/.git 2> /dev/null
+    done
+    echo WOOP!
+}
+hack &
+
+# For an intreractive session:
+# qsub -I -q arm-dev -l walltime=03:00:00
+
+# Finally install firedrake with the following options
+python firedrake-install \
+    --mpicc=cc \
+    --mpicxx=CC \
+    --mpif90=ftn \
+    --mpiexec=$HOME/bin/aprun \
+    --no-package-manager \
+    --disable-ssh \
+    --pip-install cppy \
+    --pip-install kiwisolver \
+    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp36-cp36m-linux_aarch64.whl \
+    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/vtk-8.1.2-cp36-cp36m-linux_aarch64.whl \
+    --venv-name $NEW_VENV_NAME
+
+# Additional packages can be added to Firedrake upon a sucessful build
+# using firedrake-update, see firedrake-update --help
