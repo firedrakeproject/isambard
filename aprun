@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+##################################################
+# A simple wrapper for aprun so that it can be   #
+# run on a single processor on a login node      #
+# Written by Jack Betteridge April 2020          #
+#                                                #
+##################################################
+import argparse
+
+from subprocess import run, PIPE
+
+# Fish out the number of processing elements (PE) being requested
+# This is normally specified using `-n` and that's the one case
+# we need to catch for the installer to complete
+parser = argparse.ArgumentParser()
+parser.add_argument('cmd')
+parser.add_argument('-n', '--pes',
+                    metavar='width',
+                    default=1,
+                    type=int,
+                    help='Number of PEs requested')
+args, unknown = parser.parse_known_args()
+
+# Path to aprun binary on Isambard
+aprun = '/opt/cray/alps/6.6.50-7.0.0.1_3.38__g962f7108.ari/bin/aprun'
+
+# If only one PE is requested we will throw away the aprun part
+# and just execute in serial. Otherwise we pass everything through
+# to aprun as usual
+if args.pes == 1:
+    status = run([args.cmd,] + unknown, stdout=PIPE, stderr=PIPE)
+    print(status.stderr.decode(), end='')
+    print(status.stdout.decode(), end='')
+else:
+    status = run([aprun, '-n', str(args.pes)] + unknown + [args.cmd,], stdout=PIPE, stderr=PIPE)
+    print(status.stderr.decode(), end='')
+    print(status.stdout.decode(), end='')
