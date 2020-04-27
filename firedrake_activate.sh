@@ -17,9 +17,9 @@ module load htop
 module load valgrind/3.13.0
 
 # Set main to be working directory
-export MAIN=/path/to/containing/firedrake
+export MAIN=/home/ba-jbetteridge/firedrake_fix/
 # Include the name of the venv
-export VENV_NAME=firedrake # Or wahtever you named the venv
+export VENV_NAME=new_script # Or wahtever you named the venv
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
@@ -40,9 +40,9 @@ export BLAS=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
 unset PYTHONPATH
 
 # hdf5/h5py/netcdf variables set as they were for installation
-export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+export HDF5_DIR=$MAIN/$VENV_NAME/src/petsc/default
 export HDF5_MPI=ON
-export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+export NETCDF4_DIR=$MAIN/$VENV_NAME/src/petsc/default
 
 # Set the PyOP2 compiler to the Cray wrapper
 # This currently requires a branch of PyOP2 to work correctly
