@@ -89,6 +89,7 @@ python firedrake-install \
     --mpiexec=$HOME/bin/aprun \
     --no-package-manager \
     --disable-ssh \
+    --pip-install cached_property \
     --pip-install cppy \
     --pip-install kiwisolver \
     --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp36-cp36m-linux_aarch64.whl \
