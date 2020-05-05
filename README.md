@@ -28,6 +28,7 @@ the build:
   mkdir $HOME/bin
   cd $HOME/bin
   curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/aprun
+  chmod +x aprun
 ```
 
 2. Navigate to where you want to install Firedrake, fetch the
