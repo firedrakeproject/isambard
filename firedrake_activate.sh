@@ -17,9 +17,9 @@ module load htop
 module load valgrind/3.13.0
 
 # Set main to be working directory
-export MAIN=/home/ba-jbetteridge/firedrake_fix/
+export MAIN=$HOME/
 # Include the name of the venv
-export VENV_NAME=firedrake # Or wahtever you named the venv
+export VENV_NAME=firedrake # Or whatever you named the venv
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic

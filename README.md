@@ -65,6 +65,8 @@ directory `$HOME/bin` and grab the activate script:
   curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/activate_firedrake.sh
 ```
 
+You should edit the lines `export MAIN=$HOME/` and `export VENV_NAME=firedrake`
+to match the location of the install and the name of the venv.
 Using this script ensures that the same modules and environment
 variables are set as were set at install time.
 
