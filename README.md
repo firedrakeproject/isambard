@@ -52,7 +52,7 @@ This is mostly useful if you have multiple Firedrake installations.
 3. Execute
 
 ```bash
-  ./install_firedrake_isambard
+  ./install_firedrake_isambard.sh
 ```
 
 to install Firedrake.
@@ -62,7 +62,7 @@ directory `$HOME/bin` and grab the activate script:
 
 ```bash
   cd $HOME/bin
-  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/activate_firedrake.sh
+  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/firedrake_activate.sh
 ```
 
 You should edit the lines `export MAIN=$HOME/` and `export VENV_NAME=firedrake`
