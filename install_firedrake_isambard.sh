@@ -14,7 +14,7 @@
 
 module swap PrgEnv-cray PrgEnv-gnu/6.0.6
 module load pmi-lib
-module load cray-python/3.7.3.2
+module load cray-python/3.6.5.6
 module load cray-libsci
 
 # Load some Bristol modules
@@ -101,10 +101,11 @@ python firedrake-install \
     --pip-install kiwisolver \
     --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp36-cp36m-linux_aarch64.whl \
     --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/vtk-8.1.2-cp36-cp36m-linux_aarch64.whl \
+    --remove-build-files \
     --venv-name $NEW_VENV_NAME
 
 # Additional packages can be added to Firedrake upon a sucessful build
 # using firedrake-update, see firedrake-update --help
 
 # Now tarball the venv so that it can be used on compute nodes
-tar -czvf $HOMES/bin/firedrake.tar.gz $NEW_ENV_NAME
+tar -czvf $HOME/bin/firedrake.tar.gz $NEW_VENV_NAME
