@@ -17,12 +17,15 @@ module load htop
 module load valgrind/3.13.0
 
 # Set main to be working directory
-export MAIN=$HOME/
+export MAIN=/tmp/$USER
 # Include the name of the venv
 export VENV_NAME=firedrake # Or whatever you named the venv
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
+# Not sure what this line does...
+# ...maybe magic?
+export MPICH_GNI_FORK_MODE=FULLCOPY
 
 # Set all compilers to be Cray wrappers
 export CC=cc
@@ -47,5 +50,8 @@ export NETCDF4_DIR=$MAIN/$VENV_NAME/src/petsc/default
 # Set the PyOP2 compiler to the Cray wrapper
 # This currently requires a branch of PyOP2 to work correctly
 export PYOP2_BACKEND_COMPILER=cc
+
+mkdir -p /tmp/$USER
+tar -xzf $HOME/bin/firedrake.tar.gz -C /tmp/$USER
 
 source $MAIN/$VENV_NAME/bin/activate
