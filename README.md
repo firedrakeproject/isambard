@@ -15,7 +15,7 @@ Building Firedrake requires a Python installation with a working pip.
 For this installation we will use the Cray Python available on Isambard
 
 ```bash
-  module load cray-python/3.7.3.2
+  module load cray-python/3.6.5.6
 ```
 
 The build process is set out in detail in the following steps:
