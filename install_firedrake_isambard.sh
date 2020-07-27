@@ -3,17 +3,19 @@
 ##################################################
 # Script for installing Firedrake on Isambard    #
 # Written by Jack Betteridge April 2020          #
+# Updated August 2020                            #
 #                                                #
 # Currently this script works on a login node    #
 # and uses an aprun wrapper (found in the same   #
 # repository as this script). A build on an      #
-# execution node will fail as nested aprun calls #
+# compute node will fail as nested aprun calls   #
 # are forbidden                                  #
 ##################################################
 
-module swap PrgEnv-cray PrgEnv-gnu/6.0.5
+module swap PrgEnv-cray PrgEnv-gnu/6.0.6
 module load pmi-lib
-module load cray-python/3.6.5.6
+module load cray-python/3.7.3.2
+module load cray-libsci
 
 # Load some Bristol modules
 module use /projects/bristol/modules-arm/modulefiles
@@ -25,6 +27,9 @@ export NEW_VENV_NAME=firedrake
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
+# Not sure what this line does...
+# ...maybe magic?
+export MPICH_GNI_FORK_MODE=FULLCOPY
 
 # Set all compilers to be Cray wrappers
 export CC=cc
@@ -42,8 +47,9 @@ export BLAS=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
 unset PYTHONPATH
 
 # Set main to be working directory
-# Change to working directory if submitting as a jobscript
-# cd $PBS_O_WORKDIR
+# Create this in /tmp so we don't have issues with the lustre filesystem
+mkdir -p /tmp/$USER
+cd /tmp/$USER
 MAIN=`pwd`
 # hdf5/h5py/netcdf difficult to install, help as much as possible
 # by providing these paths
@@ -52,7 +58,8 @@ export HDF5_MPI=ON
 export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
 
 # Grab the Firedrake install script (currently in a branch)
-curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
+#curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
+curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/remove-build-files/scripts/firedrake-install
 
 # Add the following options to build PETSc
 export PETSC_CONFIGURE_OPTIONS="--with-mpi-include=/opt/cray/pe/mpt/7.7.6/gni/mpich-gnu/8.2/include \
@@ -81,7 +88,7 @@ hack &
 # For an intreractive session:
 # qsub -I -q arm-dev -l walltime=03:00:00
 
-# Finally install firedrake with the following options
+# Install firedrake with the following options
 python firedrake-install \
     --mpicc=cc \
     --mpicxx=CC \
@@ -89,6 +96,7 @@ python firedrake-install \
     --mpiexec=$HOME/bin/aprun \
     --no-package-manager \
     --disable-ssh \
+    --petsc-int-type int64 \
     --pip-install cppy \
     --pip-install kiwisolver \
     --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp36-cp36m-linux_aarch64.whl \
@@ -97,3 +105,6 @@ python firedrake-install \
 
 # Additional packages can be added to Firedrake upon a sucessful build
 # using firedrake-update, see firedrake-update --help
+
+# Now tarball the venv so that it can be used on compute nodes
+tar -czvf $HOMES/bin/firedrake.tar.gz $NEW_ENV_NAME

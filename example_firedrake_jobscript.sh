@@ -20,12 +20,8 @@ cd ${PBS_O_WORKDIR}
 # case get rid of this line.
 export OMP_NUM_THREADS=1
 
-# Activate Firedrake venv
-source $HOME/bin/firedrake_activate.sh
-
-# Not sure what this line does...
-# ...maybe magic?
-export MPICH_GNI_FORK_MODE=FULLCOPY
+# Activate Firedrake venv (once per node)
+pbsdsh -u source $HOME/bin/firedrake_activate.sh
 
 # Run Firedrake script
 aprun -b -n ${nprocs} python ${myScript}
