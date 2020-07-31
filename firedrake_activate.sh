@@ -52,6 +52,6 @@ export NETCDF4_DIR=$MAIN/$VENV_NAME/src/petsc/default
 export PYOP2_BACKEND_COMPILER=cc
 
 mkdir -p /tmp/$USER
-tar -xzf $HOME/bin/firedrake.tar.gz -C /tmp/$USER
+tar -xzf $HOME/bin/$VENV_NAME.tar.gz -C /tmp/$USER
 
 source $MAIN/$VENV_NAME/bin/activate
