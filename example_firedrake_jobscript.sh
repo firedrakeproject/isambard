@@ -21,7 +21,7 @@ cd ${PBS_O_WORKDIR}
 export OMP_NUM_THREADS=1
 
 # Activate Firedrake venv (once per node)
-pbsdsh -u source $HOME/bin/firedrake_activate.sh
+pbsdsh source $HOME/bin/firedrake_activate.sh
 
 # Run Firedrake script
 aprun -b -n ${nprocs} python ${myScript}

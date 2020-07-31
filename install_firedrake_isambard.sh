@@ -108,4 +108,4 @@ python firedrake-install \
 # using firedrake-update, see firedrake-update --help
 
 # Now tarball the venv so that it can be used on compute nodes
-tar -czvf $HOME/bin/firedrake.tar.gz $NEW_VENV_NAME
+tar -czvf $HOME/bin/$NEW_VENV_NAME.tar.gz $NEW_VENV_NAME
