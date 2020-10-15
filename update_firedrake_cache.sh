@@ -1,13 +1,12 @@
 #!/bin/bash
 
 ##################################################
-# Script for updating Firedrake tarball on       #
+# Script for updating Firedrake cache tarball on #
 # Isambard                                       #
-# Written by Jack Betteridge August 2020         #
+# Written by Jack Betteridge September 2020      #
 #                                                #
 ##################################################
 
 # MAIN should be /tmp/$USER
 cd $MAIN
-mv $HOME/bin/$VENV_NAME.tar.gz $HOME/bin/$VENV_NAME.tar.gz.bck
-tar -czvf $HOME/bin/$VENV_NAME.tar.gz $VENV_NAME
+tar -czvf $HOME/bin/cache_$VENV_NAME.tar.gz cache_$VENV_NAME
