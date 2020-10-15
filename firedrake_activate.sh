@@ -7,24 +7,22 @@
 #                                                #
 ##################################################
 
-module swap PrgEnv-cray PrgEnv-gnu/6.0.5
+module purge
+module load PrgEnv-gnu
 module load pmi-lib
-module load cray-python/3.6.5.6
+module load cray-python/3.8.2.1
+module load cray-mpich
 
 # Load some Bristol modules
 module use /projects/bristol/modules-arm/modulefiles
 module load htop
-module load valgrind/3.13.0
+module load valgrind
 
-# Set main to be working directory
-export MAIN=/tmp/$USER
-# Include the name of the venv
-export VENV_NAME=firedrake # Or whatever you named the venv
+# Give the venv a name
+export VENV_NAME=firedrake  # Or whatever you named the venv
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
-# Not sure what this line does...
-# ...maybe magic?
 export MPICH_GNI_FORK_MODE=FULLCOPY
 
 # Set all compilers to be Cray wrappers
@@ -37,12 +35,18 @@ export MPICXX=CC
 export MPIF90=ftn
 
 # Needed for numpy and scipy
-export LAPACK=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
-export BLAS=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
+export LAPACK=/opt/cray/pe/libsci/default/gnu/8.1/aarch64/lib/libsci_gnu.so
+export BLAS=/opt/cray/pe/libsci/default/gnu/8.1/aarch64/lib/libsci_gnu.so
 # PYTHONPATH is set by Cray python and not helpful here!
 unset PYTHONPATH
 
-# hdf5/h5py/netcdf variables set as they were for installation
+# Set main to be working directory
+# Create this in /tmp so we don't have issues with the lustre filesystem
+mkdir -p /tmp/$USER
+cd /tmp/$USER
+MAIN=`pwd`
+# hdf5/h5py/netcdf difficult to install, help as much as possible
+# by providing these paths
 export HDF5_DIR=$MAIN/$VENV_NAME/src/petsc/default
 export HDF5_MPI=ON
 export NETCDF4_DIR=$MAIN/$VENV_NAME/src/petsc/default
