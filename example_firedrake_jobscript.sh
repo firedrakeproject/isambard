@@ -20,9 +20,13 @@ cd ${PBS_O_WORKDIR}
 # case get rid of this line.
 export OMP_NUM_THREADS=1
 
-# Activate Firedrake venv (once per node)
-pbsdsh source $HOME/bin/firedrake_activate.sh
+# Activate Firedrake venv (activate once on mom node, extract once per node)
+source $HOME/bin/fdactivate
+aprun -b -n ${nodes} -N 1 mkdir -p /tmp/$USER
+aprun -b -n ${nodes} -N 1 tar -xzf $HOME/bin/$VENV_NAME.tar.gz -C /tmp/$USER
 
 # Run Firedrake script
 aprun -b -n ${nprocs} python ${myScript}
 
+# Update tarball with compiled code cache
+aprun -b -n 1 $HOME/bin/fdactivate/updatefdtarball

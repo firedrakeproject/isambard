@@ -12,23 +12,22 @@
 # are forbidden                                  #
 ##################################################
 
-module swap PrgEnv-cray PrgEnv-gnu/6.0.6
+module purge
+module load PrgEnv-gnu
 module load pmi-lib
-module load cray-python/3.6.5.6
-module load cray-libsci
+module load cray-python/3.8.2.1
+module load cray-mpich
 
 # Load some Bristol modules
 module use /projects/bristol/modules-arm/modulefiles
 module load htop
-module load valgrind/3.13.0
+module load valgrind
 
 # Give the venv a name
 export NEW_VENV_NAME=firedrake
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
-# Not sure what this line does...
-# ...maybe magic?
 export MPICH_GNI_FORK_MODE=FULLCOPY
 
 # Set all compilers to be Cray wrappers
@@ -41,8 +40,8 @@ export MPICXX=CC
 export MPIF90=ftn
 
 # Needed for numpy and scipy
-export LAPACK=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
-export BLAS=/opt/cray/pe/libsci/18.12.1/gnu/8.1/aarch64/lib/libsci_gnu_82.so
+export LAPACK=/opt/cray/pe/libsci/default/gnu/8.1/aarch64/lib/libsci_gnu.so
+export BLAS=/opt/cray/pe/libsci/default/gnu/8.1/aarch64/lib/libsci_gnu.so
 # PYTHONPATH is set by Cray python and not helpful here!
 unset PYTHONPATH
 
@@ -58,12 +57,12 @@ export HDF5_MPI=ON
 export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
 
 # Grab the Firedrake install script (currently in a branch)
-#curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
-curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/remove-build-files/scripts/firedrake-install
+# curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
+curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/numpy_fix/scripts/firedrake-install
 
 # Add the following options to build PETSc
-export PETSC_CONFIGURE_OPTIONS="--with-mpi-include=/opt/cray/pe/mpt/7.7.6/gni/mpich-gnu/8.2/include \
-    --with-mpi-lib=/opt/cray/pe/mpt/7.7.6/gni/mpich-gnu/8.2/lib/libmpich.a \
+export PETSC_CONFIGURE_OPTIONS="--with-mpi-include=/opt/cray/pe/mpt/default/gni/mpich-gnu/8.1/include \
+    --with-mpi-lib=/opt/cray/pe/mpt/default/gni/mpich-gnu/8.1/lib/libmpich.so \
     --with-x=0 --with-make-np=32 \
     --COPTFLAGS='-O3 -march=native -mtune=native' \
     --CXXOPTFLAGS='-O3 -march=native -mtune=native' \
@@ -99,10 +98,12 @@ python firedrake-install \
     --petsc-int-type int64 \
     --pip-install cppy \
     --pip-install kiwisolver \
-    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp36-cp36m-linux_aarch64.whl \
-    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/vtk-8.1.2-cp36-cp36m-linux_aarch64.whl \
+    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp38-cp38m-linux_aarch64.whl \
+    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/vtk-9.0.1-cp38-cp38m-linux_aarch64.whl \
+    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
     --remove-build-files \
-    --venv-name $NEW_VENV_NAME
+    --venv-name $NEW_VENV_NAME \
+    --cache-dir $MAIN/.cache_$NEW_VENV_NAME
 
 # Additional packages can be added to Firedrake upon a sucessful build
 # using firedrake-update, see firedrake-update --help
