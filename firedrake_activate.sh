@@ -47,6 +47,7 @@ unset PYTHONPATH
 # Create this in /tmp so we don't have issues with the lustre filesystem
 mkdir -p /tmp/$USER
 export MAIN=/tmp/$USER
+
 # hdf5/h5py/netcdf difficult to install, help as much as possible
 # by providing these paths
 export HDF5_DIR=$MAIN/$VENV_NAME/src/petsc/default

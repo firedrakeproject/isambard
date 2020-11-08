@@ -9,5 +9,5 @@
 
 # MAIN should be /tmp/$USER
 cd $MAIN
-mv $HOME/bin/firedrake.tar.gz $HOME/bin/firedrake.tar.gz.bck
-tar -czvf $HOME/bin/firedrake.tar.gz $VENV_NAME
+mv $HOME/bin/$VENV_NAME.tar.gz $HOME/bin/$VENV_NAME.tar.gz.bck
+tar -czvf $HOME/bin/$VENV_NAME.tar.gz $VENV_NAME
