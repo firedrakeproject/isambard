@@ -7,6 +7,7 @@ python_install_dir=${PWD}/python/${python_version_num}
 
 echo "Setting up modules"
 module swap PrgEnv-cray PrgEnv-gnu
+module load tools/cmake
 module list
 
 echo "Setting PKG_CONFIG_PATH to pick up libffi"
