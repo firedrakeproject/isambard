@@ -22,6 +22,7 @@ export OMP_NUM_THREADS=1
 
 module swap PrgEnv-cray PrgEnv-gnu
 module load cray-python
+module load cray-hdf5-parallel
 
 # Set compiler for PyOP2
 export CC=cc
