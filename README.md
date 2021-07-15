@@ -4,8 +4,6 @@ This build process describes how to install Firedrake on Isambard XCI (the ARM p
 
 The build process will work better if you upload your Isambard public SSH key to GitHub (see https://help.github.com/articles/connecting-to-github-with-ssh/ for how to do this). You can build Firedrake without uploading an SSH key but you will see some warnings during the build processes. 
 
-Building Firedrake requires a Python installation with a working pip. The Python versions available as modules on Isambard do not have a working pip so you will need to build your own Python distribution before building Firedrake.
-
 The build process is set out in detail in the following steps:
 
 1. Make a new directory on Isambard to use for building Firedrake. This can be called anything you like but for the purposes of these instructions we will assume the directory is `${HOME}/firedrake`:
@@ -23,12 +21,7 @@ The build process is set out in detail in the following steps:
    ln -s isambard/*.sh .
 ```
 
-3. Build Python:
-```bash
-   bash build_python3.7_isambard.sh
-```
-
-4. Submit a job to the queue to build Firedrake :
+3. Submit a job to the queue to build Firedrake :
 ```bash
    qsub submit_build.sh
 ```
