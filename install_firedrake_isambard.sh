@@ -6,12 +6,13 @@ echo "Setting up modules"
 module swap PrgEnv-cray PrgEnv-gnu
 module load tools/cmake
 module load cray-python
+module load cray-hdf5-parallel
 
 # Unset the python path otherwise the Firedrake install script won't run
 unset PYTHONPATH
 
 # Set PETSc options
-export PETSC_CONFIGURE_OPTIONS="-with-cc=cc -with-cxx=CC -with-mpiexec=aprun --download-hdf5 --download-hdf5-configure-arguments='-build=aarch64-unknown-linux-gnu'"
+export PETSC_CONFIGURE_OPTIONS="-with-cc=cc -with-cxx=CC -with-mpiexec=aprun --with-hdf5-dir=${HDF5_DIR}"
 
 # Set all compilers to Cray wrappers for consistency
 export CC=cc
