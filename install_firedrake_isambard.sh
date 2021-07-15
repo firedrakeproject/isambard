@@ -27,8 +27,8 @@ else
 fi
 
 echo "Fetching install script"
-#curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/isambardBuild/scripts/firedrake-install
-cp /home/ex-dmacreman/firedrake_branch/firedrake/scripts/firedrake-install .
+curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/isambardBuild/scripts/firedrake-install
+
 echo "Installing"
 python3 firedrake-install --verbose --no-package-manager --mpicc=cc --mpicxx=CC --mpif90=ftn --mpiexec=aprun $@
 
