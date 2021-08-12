@@ -37,6 +37,7 @@ curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scri
 
 echo "Installing"
 vtk_wheel="https://github.com/firedrakeproject/VTKPythonPackage/releases/download/firedrake_20210613/vtk-9.0.1-cp38-cp38-linux_aarch64.whl"
-python3 firedrake-install --verbose --no-package-manager --mpicc=cc --mpicxx=CC --mpif90=ftn --mpiexec=aprun --pip-install ${vtk_wheel} $@
+netcdf_wheel="/projects/exeter/firedrake/wheels/netCDF4-1.5.7-cp38-cp38-linux_aarch64.whl"
+python3 firedrake-install --verbose --no-package-manager --mpicc=cc --mpicxx=CC --mpif90=ftn --mpiexec=aprun --pip-install ${vtk_wheel} --pip-install ${netcdf_wheel} $@
 
 echo "Done"
