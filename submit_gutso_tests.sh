@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -q arm
-#PBS -l walltime=00:30:00
+#PBS -l walltime=02:00:00
 #PBS -l select=1
 #PBS -N Gusto_tests
 
