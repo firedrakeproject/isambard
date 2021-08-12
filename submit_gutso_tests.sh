@@ -17,12 +17,8 @@ cd ${my_gusto}
 export OMP_NUM_THREADS=1
 
 module swap PrgEnv-cray PrgEnv-gnu
-
-export LD_LIBRARY_PATH=${my_firedrake}/python/3.7.4/lib:${LD_LIBRARY_PATH}
-export PATH=${my_firedrake}/python/3.7.4/bin:${PATH}
-
-# Allow dynamically linked executables to be built
-export CRAYPE_LINK_TYPE=dynamic
+module load cray-python
+module load cray-hdf5-parallel
 
 # Set compiler for PyOP2
 export CC=cc
