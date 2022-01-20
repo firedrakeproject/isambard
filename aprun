@@ -23,7 +23,7 @@ parser.add_argument('-n', '--pes',
 args, unknown = parser.parse_known_args()
 
 # Path to aprun binary on Isambard
-aprun = '/opt/cray/alps/6.6.50-7.0.0.1_3.38__g962f7108.ari/bin/aprun'
+aprun = '/opt/cray/alps/default/bin/aprun'
 
 # If only one PE is requested we will throw away the aprun part
 # and just execute in serial. Otherwise we pass everything through

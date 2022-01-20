@@ -10,7 +10,7 @@
 module purge
 module load PrgEnv-gnu
 module load pmi-lib
-module load cray-python/3.8.2.1
+module load cray-python/3.8.5.1
 module load cray-mpich
 
 # Load some Bristol modules

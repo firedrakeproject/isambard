@@ -7,6 +7,7 @@
 # The script you want to run
 myScript=script.py
 # The number of processors to use
+nodes=1
 nprocs=64
 
 # The following lines should not require modification #######
@@ -22,11 +23,10 @@ export OMP_NUM_THREADS=1
 
 # Activate Firedrake venv (activate once on mom node, extract once per node)
 source $HOME/bin/fdactivate
-aprun -b -n ${nodes} -N 1 mkdir -p /tmp/$USER
-aprun -b -n ${nodes} -N 1 tar -xzf $HOME/bin/$VENV_NAME.tar.gz -C /tmp/$USER
+aprun -b -n ${nodes} -N 1 $HOME/bin/fdactivate
 
 # Run Firedrake script
 aprun -b -n ${nprocs} python ${myScript}
 
 # Update tarball with compiled code cache
-aprun -b -n 1 $HOME/bin/fdactivate/updatefdtarball
+aprun -b -n 1 $HOME/bin/updatefdcache

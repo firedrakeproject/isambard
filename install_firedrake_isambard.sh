@@ -15,7 +15,7 @@
 module purge
 module load PrgEnv-gnu
 module load pmi-lib
-module load cray-python/3.8.2.1
+module load cray-python/3.8.5.1
 module load cray-mpich
 
 # Load some Bristol modules
@@ -24,7 +24,7 @@ module load htop
 module load valgrind
 
 # Give the venv a name
-export NEW_VENV_NAME=firedrake
+export NEW_VENV_NAME=firedrake21
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
@@ -52,13 +52,12 @@ cd /tmp/$USER
 MAIN=`pwd`
 # hdf5/h5py/netcdf difficult to install, help as much as possible
 # by providing these paths
-export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
-export HDF5_MPI=ON
-export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+#~ export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+#~ export HDF5_MPI=ON
+#~ export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
 
-# Grab the Firedrake install script (currently in a branch)
-# curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
-curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/numpy_fix/scripts/firedrake-install
+# Grab the Firedrake install script
+curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
 
 # Add the following options to build PETSc
 export PETSC_CONFIGURE_OPTIONS="--with-mpi-include=/opt/cray/pe/mpt/default/gni/mpich-gnu/8.1/include \
@@ -95,12 +94,11 @@ python firedrake-install \
     --mpiexec=$HOME/bin/aprun \
     --no-package-manager \
     --disable-ssh \
-    --petsc-int-type int64 \
     --pip-install cppy \
     --pip-install kiwisolver \
-    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/cffi-1.13.2-cp38-cp38m-linux_aarch64.whl \
-    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/vtk-9.0.1-cp38-cp38m-linux_aarch64.whl \
-    --pip-install https://github.com/firedrakeproject/isambard/raw/alternative_install/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
+    --pip-install $HOME/wheels/cffi/cffi-1.14.3-cp38-cp38-linux_aarch64.whl \
+    --pip-install $HOME/wheels/vtk/vtk-9.0.1-cp38-cp38-linux_aarch64.whl \
+    --pip-install $HOME/wheels/symengine.py/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
     --remove-build-files \
     --venv-name $NEW_VENV_NAME \
     --cache-dir $MAIN/.cache_$NEW_VENV_NAME
@@ -109,4 +107,7 @@ python firedrake-install \
 # using firedrake-update, see firedrake-update --help
 
 # Now tarball the venv so that it can be used on compute nodes
-tar -czvf $HOME/bin/$NEW_VENV_NAME.tar.gz $NEW_VENV_NAME
+mkdir -p $MAIN/.cache_$NEW_VENV_NAME
+touch $MAIN/.cache_$NEW_VENV_NAME/foo
+tar -czf $HOME/bin/$NEW_VENV_NAME.tar.gz $NEW_VENV_NAME
+tar -czf $HOME/bin/cache_$NEW_VENV_NAME.tar.gz .cache_$NEW_VENV_NAME
