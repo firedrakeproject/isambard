@@ -32,6 +32,7 @@ export PYTHONDONTWRITEBYTECODE=True
 export CC=cc
 export CXX=CC
 export F90=ftn
+export F77=ftn
 
 export MPICC=cc
 export MPICXX=CC

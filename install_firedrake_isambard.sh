@@ -24,7 +24,7 @@ module load htop
 module load valgrind
 
 # Give the venv a name
-export NEW_VENV_NAME=firedrake21
+export NEW_VENV_NAME=firedrake
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
@@ -34,6 +34,7 @@ export MPICH_GNI_FORK_MODE=FULLCOPY
 export CC=cc
 export CXX=CC
 export F90=ftn
+export F77=ftn
 
 export MPICC=cc
 export MPICXX=CC
@@ -109,5 +110,6 @@ python firedrake-install \
 # Now tarball the venv so that it can be used on compute nodes
 mkdir -p $MAIN/.cache_$NEW_VENV_NAME
 touch $MAIN/.cache_$NEW_VENV_NAME/foo
+mkdir -p $HOME/bin
 tar -czf $HOME/bin/$NEW_VENV_NAME.tar.gz $NEW_VENV_NAME
 tar -czf $HOME/bin/cache_$NEW_VENV_NAME.tar.gz .cache_$NEW_VENV_NAME
