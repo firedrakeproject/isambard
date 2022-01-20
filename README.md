@@ -48,16 +48,9 @@ This is mostly useful if you have multiple Firedrake installations.
 
 to install Firedrake.
 
-4. Finally, to activate the new Firedrake venv, change back into the
-directory `$HOME/bin` and grab the activate script:
-
-```bash
-  cd $HOME/bin
-  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/firedrake_activate.sh
-```
-
-You should edit the line `export VENV_NAME=firedrake`
-to match the location of the install and the name of the venv.
+4. Finally, you should edit the line `export VENV_NAME=firedrake`
+in the file `firedrake_activate.sh`
+to match the name of the venv if you edited it in step 2.
 Using this script ensures that the same modules and environment
 variables are set as were set at install time.
 
