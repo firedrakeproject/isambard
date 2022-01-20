@@ -15,32 +15,23 @@ Building Firedrake requires a Python installation with a working pip.
 For this installation we will use the Cray Python available on Isambard
 
 ```bash
-  module load cray-python/3.6.5.6
+  module load cray-python/3.8.5.1
 ```
 
 The build process is set out in detail in the following steps:
 
-1. If it doesn't exist already create the directory `$HOME/bin`,
-change to that directory and grab the aprun wrapper that we use for
-the build:
+
+1. Clone this repository to somewhere in your workspace and checkout the
+`alternative_install` branch
 
 ```bash
-  mkdir $HOME/bin
-  cd $HOME/bin
-  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/aprun
-  chmod +x aprun
+  cd /place/for/repos
+  git clone https://github.com/firedrakeproject/isambard.git
+  cd isambard
+  git checkout -b alternative_install origin/alternative_install
 ```
 
-2. Navigate to where you want to install Firedrake, fetch the
-install script and make it executable
-
-```bash
-  cd /place/to/install/firedrake
-  curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/install_firedrake_isambard.sh
-  chmod +x install_firedrake_isambard.sh
-```
-
-You may wish to modify the line
+2. You may wish to modify the line
 
 ```bash
   export NEW_VENV_NAME=firedrake
@@ -65,7 +56,7 @@ directory `$HOME/bin` and grab the activate script:
   curl -O https://raw.githubusercontent.com/firedrakeproject/isambard/alternative_install/firedrake_activate.sh
 ```
 
-You should edit the lines `export MAIN=$HOME/` and `export VENV_NAME=firedrake`
+You should edit the line `export VENV_NAME=firedrake`
 to match the location of the install and the name of the venv.
 Using this script ensures that the same modules and environment
 variables are set as were set at install time.

@@ -46,6 +46,13 @@ export BLAS=/opt/cray/pe/libsci/default/gnu/8.1/aarch64/lib/libsci_gnu.so
 # PYTHONPATH is set by Cray python and not helpful here!
 unset PYTHONPATH
 
+# Link scripts in this repo to $HOME/bin
+mkdir -p $HOME/bin
+ln -s ${PWD}/aprun $HOME/bin/aprun
+ln -s ${PWD}/firedrake_activate.sh $HOME/bin/firedrake_activate.sh
+ln -s ${PWD}/update_firedrake_cache.sh $HOME/bin/update_firedrake_cache.sh
+ln -s ${PWD}/update_firedrake_tarball.sh $HOME/bin/update_firedrake_tarball.sh
+
 # Set main to be working directory
 # Create this in /tmp so we don't have issues with the lustre filesystem
 mkdir -p /tmp/$USER
@@ -88,6 +95,7 @@ hack &
 # qsub -I -q arm-dev -l walltime=03:00:00
 
 # Install firedrake with the following options
+export WHEEL_HOUSE=/home/ri-jbetteri/shared/wheels
 python firedrake-install \
     --mpicc=cc \
     --mpicxx=CC \
@@ -97,9 +105,9 @@ python firedrake-install \
     --disable-ssh \
     --pip-install cppy \
     --pip-install kiwisolver \
-    --pip-install $HOME/wheels/cffi/cffi-1.14.3-cp38-cp38-linux_aarch64.whl \
-    --pip-install $HOME/wheels/vtk/vtk-9.0.1-cp38-cp38-linux_aarch64.whl \
-    --pip-install $HOME/wheels/symengine.py/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
+    --pip-install $WHEEL_HOUSE/cffi/cffi-1.14.3-cp38-cp38-linux_aarch64.whl \
+    --pip-install $WHEEL_HOUSE/vtk/vtk-9.0.1-cp38-cp38-linux_aarch64.whl \
+    --pip-install $WHEEL_HOUSE/symengine.py/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
     --remove-build-files \
     --venv-name $NEW_VENV_NAME \
     --cache-dir $MAIN/.cache_$NEW_VENV_NAME
@@ -110,6 +118,6 @@ python firedrake-install \
 # Now tarball the venv so that it can be used on compute nodes
 mkdir -p $MAIN/.cache_$NEW_VENV_NAME
 touch $MAIN/.cache_$NEW_VENV_NAME/foo
-mkdir -p $HOME/bin
 tar -czf $HOME/bin/$NEW_VENV_NAME.tar.gz $NEW_VENV_NAME
 tar -czf $HOME/bin/cache_$NEW_VENV_NAME.tar.gz .cache_$NEW_VENV_NAME
+rm $HOME/bin/aprun
