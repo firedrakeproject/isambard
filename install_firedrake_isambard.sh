@@ -17,6 +17,7 @@ module load PrgEnv-gnu
 module load pmi-lib
 module load cray-python/3.8.5.1
 module load cray-mpich
+module load alps
 
 # Load some Bristol modules
 module use /projects/bristol/modules-arm/modulefiles
@@ -24,7 +25,7 @@ module load htop
 module load valgrind
 
 # Give the venv a name
-export NEW_VENV_NAME=firedrake
+export NEW_VENV_NAME=firedrake20230728
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic
@@ -60,9 +61,9 @@ cd /tmp/$USER
 MAIN=`pwd`
 # hdf5/h5py/netcdf difficult to install, help as much as possible
 # by providing these paths
-#~ export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
-#~ export HDF5_MPI=ON
-#~ export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+export HDF5_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
+export HDF5_MPI=ON
+export NETCDF4_DIR=$MAIN/$NEW_VENV_NAME/src/petsc/default
 
 # Grab the Firedrake install script
 curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
@@ -110,7 +111,8 @@ python firedrake-install \
     --pip-install $WHEEL_HOUSE/symengine.py/symengine-0.6.1-cp38-cp38-linux_aarch64.whl \
     --remove-build-files \
     --venv-name $NEW_VENV_NAME \
-    --cache-dir $MAIN/.cache_$NEW_VENV_NAME
+    --cache-dir $MAIN/.cache_$NEW_VENV_NAME \
+    --install gusto
 
 # Additional packages can be added to Firedrake upon a sucessful build
 # using firedrake-update, see firedrake-update --help

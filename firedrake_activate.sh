@@ -12,6 +12,7 @@ module load PrgEnv-gnu
 module load pmi-lib
 module load cray-python/3.8.5.1
 module load cray-mpich
+module load alps
 
 # Load some Bristol modules
 module use /projects/bristol/modules-arm/modulefiles
@@ -19,7 +20,7 @@ module load htop
 module load valgrind
 
 # Give the venv a name
-export VENV_NAME=firedrake  # Or whatever you named the venv
+export VENV_NAME=firedrake20230728  # Or whatever you named the venv
 
 # Dynamic linking
 export CRAYPE_LINK_TYPE=dynamic

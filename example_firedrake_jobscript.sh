@@ -25,6 +25,9 @@ export OMP_NUM_THREADS=1
 source $HOME/bin/fdactivate
 aprun -b -n ${nodes} -N 1 $HOME/bin/fdactivate
 
+# Jack said I need this hack:
+export LD_PRELOAD=/opt/cray/pe/gcc-libs/libgomp.so.1
+
 # Run Firedrake script
 aprun -b -n ${nprocs} python ${myScript}
 
